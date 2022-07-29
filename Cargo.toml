@@ -1,7 +1,10 @@
 [package]
-name = "trngApi"
+name = "random_api"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 actix-web = "4"
+rand = "0.8"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
