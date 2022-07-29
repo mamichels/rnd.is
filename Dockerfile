@@ -18,7 +18,7 @@ RUN adduser \
     "${USER}"
 
 
-WORKDIR /myapp
+WORKDIR /app
 
 COPY ./ .
 
@@ -34,9 +34,11 @@ COPY --from=builder /etc/group /etc/group
 WORKDIR /app
 
 # Copy our build
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/app ./
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/random_api ./
+
+EXPOSE 8080
 
 # Use an unprivileged user.
 USER app:app
 
-CMD ["/app/app"]
+CMD ["./random_api"]
