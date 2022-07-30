@@ -1,0 +1,102 @@
+openapi: 3.0.3
+
+info:
+  title: rnd.is
+  version: 0.1.0
+  description: An API to generate random values.
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  x-logo:
+    url: https://i.postimg.cc/5t7GCYH1/rnd-is-logo-rclear.png
+
+servers:
+  - url: rnd.is
+    description: 'Publicly available service'
+
+externalDocs:
+  url: https://github.com/mamichels/rnd.is
+
+paths:
+  /:
+    get:
+      summary: root
+      responses:
+        200:
+            description: 'I respond, enjoy crawling. ψ(._. )>'
+            content:
+                text/plain:
+                  schema:
+                      type: string
+                      example: 'rnd.is'
+  /number:
+    get:
+      summary: Resolves a single random number
+      parameters:
+        - name: min
+          description: The lower bound of the expected random number.
+          example: '1'
+          schema:
+            format: number
+            pattern: ^\d+$
+            type: number
+          in: query
+          required: true
+        - name: max
+          description: The upper bound of the expected random number.
+          example: '10'
+          schema:
+            format: number
+            pattern: ^\d+$
+            type: number
+          in: query
+          required: true
+      responses:
+        '200':
+          description: A random number between min and max.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ApiResponse'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  responses:
+    ApiResponse:
+      description: A response from the API.
+      content:
+        application/json:
+          schema:
+            required:
+              - apiVersion
+              - data
+            type: object
+            properties:
+              apiVersion:
+                type: string
+                example: '0.1.0'
+              params:
+                type: object
+                example:
+                  min: 1
+                  max: 10
+              data:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: 'number'
+                  value:
+                    type: number
+                    example: '5'
