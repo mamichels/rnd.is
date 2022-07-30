@@ -32,7 +32,7 @@ pub async fn number(bounds: Query<Bounds>) -> HttpResponse {
 
 fn create_response(value: u32, params: Bounds) -> ApiResponse {
     ApiResponse {
-        api_version: "1.0".to_string(),
+        api_version: "0.1.0".to_string(),
         params,
         data: ApiData {
             kind: "number".to_string(),
@@ -59,7 +59,7 @@ mod tests {
         let bytes = body::to_bytes(resp.into_body()).await.unwrap();
 
         let actual = str::from_utf8(&bytes).unwrap();
-        let expected = "\"apiVersion\":\"1.0\"";
+        let expected = "\"apiVersion\":\"0.1.0\"";
         assert!(actual.contains(expected));
     }
 }
