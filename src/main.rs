@@ -1,5 +1,5 @@
 use actix_web::{App, HttpServer, web};
-use rnd_is::api::{number, home, serve_openapi_spec, ping};
+use rnd_is::api::{number, numbers, home, serve_openapi_spec, ping};
 use std::env;
 
 #[actix_web::main]
@@ -10,6 +10,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(home))
             .route("/openapi", web::get().to(serve_openapi_spec))
             .route("/number", web::get().to(number))
+            .route("/numbers", web::get().to(numbers))
     })
         .bind(("0.0.0.0", resolve_port()))?
         .run()

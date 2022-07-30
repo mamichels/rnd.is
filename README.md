@@ -22,7 +22,7 @@ curl -X GET 'rnd.is/number?min=1&max=404'
 Returns:
 ```json
 {
-  "apiVersion": "0.1.0",
+  "apiVersion": "0.2.0",
   "params": {
     "min": 1,
     "max": 404
@@ -30,6 +30,34 @@ Returns:
   "data": {
     "kind": "number",
     "value": 327
+  }
+}
+```
+### /numbers
+Returns an array of random numbers between the lower and upper bound.
+```shell
+
+GET /number?length=<LENGTH>&min=<LOWER_BOUND>&max=<UPPER_BOUND>
+
+# E.g.:
+curl -X GET 'rnd.is/numbers?length=3&min=1&max=404'
+```
+Returns:
+```json
+{
+  "apiVersion": "0.2.0",
+  "params": {
+    "min": 1,
+    "max": 404,
+    "length": 3
+  },
+  "data": {
+    "kind": "number",
+    "value": [
+      304,
+      139,
+      56
+    ]
   }
 }
 ```

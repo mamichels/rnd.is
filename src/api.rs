@@ -1,7 +1,7 @@
 use actix_files::NamedFile;
 use actix_web::{HttpResponse, Error};
 use actix_web::web::Query;
-use crate::random::generate_number;
+use crate::random::{generate_number, generate_numbers};
 use serde::{Serialize, Deserialize};
 use std::str;
 use std::path::PathBuf;
@@ -11,23 +11,30 @@ const OPENAPI_SPEC_PATH: &str = "./static/openapi.yml";
 const INDEX_PATH: &str = "./static/index.html";
 
 #[derive(Deserialize, Serialize)]
-pub struct Bounds {
+pub struct NumberQuery {
     min: u32,
     max: u32,
 }
 
-#[derive(Serialize)]
-pub struct ApiResponse {
-    #[serde(rename(serialize = "apiVersion"))]
-    api_version: String,
-    params: Bounds,
-    data: ApiData,
+#[derive(Deserialize, Serialize)]
+pub struct NumbersQuery {
+    min: u32,
+    max: u32,
+    length: u32,
 }
 
 #[derive(Serialize)]
-pub struct ApiData {
+pub struct ApiResponse<T, K> {
+    #[serde(rename(serialize = "apiVersion"))]
+    api_version: String,
+    params: K,
+    data: ApiData<T>,
+}
+
+#[derive(Serialize)]
+pub struct ApiData<T> {
     kind: String,
-    value: u32,
+    value: T,
 }
 
 pub async fn home() -> Result<NamedFile, Error> {
@@ -44,13 +51,19 @@ pub async fn serve_openapi_spec() -> Result<NamedFile, Error> {
     Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
 }
 
-pub async fn number(bounds: Query<Bounds>) -> HttpResponse {
+pub async fn number(bounds: Query<NumberQuery>) -> HttpResponse {
     let value = generate_number(bounds.min, bounds.max);
     let api_response = create_response(value, bounds.into_inner());
     HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
 }
 
-fn create_response(value: u32, params: Bounds) -> ApiResponse {
+pub async fn numbers(bounds: Query<NumbersQuery>) -> HttpResponse {
+    let value = generate_numbers(bounds.min, bounds.max, bounds.length);
+    let api_response = create_response(value, bounds.into_inner());
+    HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
+}
+
+fn create_response<T, K>(value: T, params: K) -> ApiResponse<T, K> {
     ApiResponse {
         api_version: API_VERSION.to_string(),
         params,
@@ -89,18 +102,25 @@ mod tests {
 
     #[actix_web::test]
     async fn number_ok() {
-        let resp = number(Query { 0: (Bounds { min: 0, max: 10 }) }).await;
+        let resp = number(Query { 0: (NumberQuery { min: 0, max: 10 }) }).await;
+
+        assert_eq!(resp.status(), http::StatusCode::OK);
+    }
+
+    #[actix_web::test]
+    async fn numbers_ok() {
+        let resp = numbers(Query { 0: (NumbersQuery { min: 0, max: 10, length: 3 }) }).await;
 
         assert_eq!(resp.status(), http::StatusCode::OK);
     }
 
     #[actix_web::test]
     async fn number_api_version() {
-        let resp = number(Query { 0: (Bounds { min: 0, max: 10 }) }).await;
+        let resp = number(Query { 0: (NumberQuery { min: 0, max: 10 }) }).await;
         let bytes = body::to_bytes(resp.into_body()).await.unwrap();
 
         let actual = str::from_utf8(&bytes).unwrap();
-        let expected = "\"apiVersion\":\"0.1.0\"";
+        let expected = "\"apiVersion\":\"0.2.0\"";
         assert!(actual.contains(expected));
     }
 }
