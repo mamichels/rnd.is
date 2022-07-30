@@ -153,3 +153,40 @@ paths:
             application/json:
               schema:
                 type: object
+  /uuid:
+    get:
+      summary: Resolves an uuid
+      responses:
+        '200':
+          description: A response containing a uuid.
+          content:
+            application/json:
+              schema:
+                required:
+                  - apiVersion
+                  - data
+                type: object
+                properties:
+                  apiVersion:
+                    type: string
+                    example: '0.1.0'
+                  params:
+                    type: object
+                    example:
+                      min: 1
+                      max: 10
+                  data:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                        example: 'string'
+                      value:
+                        type: string
+                        example: '4876d3bd-b433-4b99-a159-4e8ccc9362d9'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                type: object

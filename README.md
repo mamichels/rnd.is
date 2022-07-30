@@ -13,7 +13,6 @@ Use the publicly available instance or run your own instance.
 ### /number
 Returns a random number between the lower and upper bound.
 ```shell
-
 GET /number?min=<LOWER_BOUND>&max=<UPPER_BOUND>
 
 # E.g.:
@@ -22,7 +21,7 @@ curl -X GET 'rnd.is/number?min=1&max=404'
 Returns:
 ```json
 {
-  "apiVersion": "0.2.0",
+  "apiVersion": "0.3.0",
   "params": {
     "min": 1,
     "max": 404
@@ -36,7 +35,6 @@ Returns:
 ### /numbers
 Returns an array of random numbers between the lower and upper bound.
 ```shell
-
 GET /number?length=<LENGTH>&min=<LOWER_BOUND>&max=<UPPER_BOUND>
 
 # E.g.:
@@ -45,7 +43,7 @@ curl -X GET 'rnd.is/numbers?length=3&min=1&max=404'
 Returns:
 ```json
 {
-  "apiVersion": "0.2.0",
+  "apiVersion": "0.3.0",
   "params": {
     "min": 1,
     "max": 404,
@@ -58,6 +56,25 @@ Returns:
       139,
       56
     ]
+  }
+}
+```
+### /uuid
+Returns an uuid.
+```shell
+GET /uuid
+
+# E.g.:
+curl -X GET 'rnd.is/uuid'
+```
+Returns:
+```json
+{
+  "apiVersion": "0.3.0",
+  "params": null,
+  "data": {
+    "kind": "string",
+    "value": "08e54ac3-e661-44ee-88b1-09a6afcb34b4"
   }
 }
 ```

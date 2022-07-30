@@ -1,7 +1,7 @@
 use actix_files::NamedFile;
 use actix_web::{HttpResponse, Error};
 use actix_web::web::Query;
-use crate::random::{generate_number, generate_numbers};
+use crate::random::{generate_number, generate_numbers, generate_uuid};
 use serde::{Serialize, Deserialize};
 use std::str;
 use std::path::PathBuf;
@@ -53,22 +53,28 @@ pub async fn serve_openapi_spec() -> Result<NamedFile, Error> {
 
 pub async fn number(bounds: Query<NumberQuery>) -> HttpResponse {
     let value = generate_number(bounds.min, bounds.max);
-    let api_response = create_response(value, bounds.into_inner());
+    let api_response = create_response(value, bounds.into_inner(), "number");
     HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
 }
 
 pub async fn numbers(bounds: Query<NumbersQuery>) -> HttpResponse {
     let value = generate_numbers(bounds.min, bounds.max, bounds.length);
-    let api_response = create_response(value, bounds.into_inner());
+    let api_response = create_response(value, bounds.into_inner(), "number");
     HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
 }
 
-fn create_response<T, K>(value: T, params: K) -> ApiResponse<T, K> {
+pub async fn uuid() -> HttpResponse {
+    let value = generate_uuid();
+    let api_response = create_response(value, (), "string");
+    HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
+}
+
+fn create_response<T, K>(value: T, params: K, kind: &str) -> ApiResponse<T, K> {
     ApiResponse {
         api_version: API_VERSION.to_string(),
         params,
         data: ApiData {
-            kind: "number".to_string(),
+            kind: kind.to_string(),
             value,
         },
     }
@@ -115,12 +121,19 @@ mod tests {
     }
 
     #[actix_web::test]
+    async fn uuid_ok() {
+        let resp = uuid().await;
+
+        assert_eq!(resp.status(), http::StatusCode::OK);
+    }
+
+    #[actix_web::test]
     async fn number_api_version() {
         let resp = number(Query { 0: (NumberQuery { min: 0, max: 10 }) }).await;
         let bytes = body::to_bytes(resp.into_body()).await.unwrap();
 
         let actual = str::from_utf8(&bytes).unwrap();
-        let expected = "\"apiVersion\":\"0.2.0\"";
+        let expected = "\"apiVersion\":\"0.3.0\"";
         assert!(actual.contains(expected));
     }
 }
