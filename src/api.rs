@@ -8,6 +8,7 @@ use std::path::PathBuf;
 
 const API_VERSION: &str = env!("CARGO_PKG_VERSION");
 const OPENAPI_SPEC_PATH: &str = "./static/openapi.yml";
+const INDEX_PATH: &str = "./static/index.html";
 
 #[derive(Deserialize, Serialize)]
 pub struct Bounds {
@@ -29,8 +30,9 @@ pub struct ApiData {
     value: u32,
 }
 
-pub async fn home() -> HttpResponse {
-    HttpResponse::Ok().body("RND.IS API VERSION: ".to_owned() + API_VERSION)
+pub async fn home() -> Result<NamedFile, Error> {
+    let path: PathBuf = INDEX_PATH.parse().unwrap();
+    Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_HTML))
 }
 
 pub async fn ping() -> HttpResponse {
@@ -72,20 +74,10 @@ mod tests {
     }
 
     #[actix_web::test]
-    async fn home_ok() {
-        let resp = home().await;
-
-        assert_eq!(resp.status(), http::StatusCode::OK);
-    }
-
-    #[actix_web::test]
-    async fn home_content_contains_title() {
-        let resp = home().await;
-        let bytes = body::to_bytes(resp.into_body()).await.unwrap();
-
-        let actual = str::from_utf8(&bytes).unwrap();
-        let expected = "RND.IS";
-        assert!(actual.contains(expected));
+    async fn home_path() {
+        let resp = home().await.unwrap();
+        let path = resp.path().as_os_str();
+        assert!(path.to_str().unwrap().to_string().contains("index.html"));
     }
 
     #[actix_web::test]

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RND.IS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: #454545;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #425775;
+        }
+
+        .container {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .panel {
+            display: flex;
+            width: 65%;
+            padding: 1rem;
+        }
+
+        .panel-left {
+            margin-right: auto;
+        }
+
+        .panel-right {
+            text-align: right;
+        }
+
+        .panel-right img {
+            width: 100%;
+        }
+
+        .box-action {
+            margin-top: 6rem;
+        }
+
+        a.button {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 2rem;
+            padding: 0.35em 1.0em;
+            border: 0.1em solid #425775;
+            margin: 0 0.3em 0.3em 0;
+            border-radius: 0.4em;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: #FAFAFA;
+            text-align: center;
+            transition: all 0.2s;
+            background-color: #425775;
+        }
+
+        a.button:hover {
+            color: #FAFAFA;
+            background-color: #6281ad;
+            border: 0.1em solid #6281ad;
+        }
+
+        .button-label {
+            margin-left: 1rem;
+        }
+
+        .button-icon {
+            height: 3.5rem;
+        }
+
+        .invert {
+            filter: invert(100%);
+        }
+
+        svg {
+            z-index: -1;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        @media all and (max-width: 30em) {
+            a.button {
+                display: block;
+                margin: 0.4em auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel">
+        <div class="panel-left">
+            <div class="box-header">
+                <h2>RND.IS</h2>
+            </div>
+            <div class="box-body">
+                <div class="box-body-content">
+                    <h1>A source for randomness</h1>
+                </div>
+            </div>
+            <div class="box-action">
+                <a href="./openapi" class="button">
+                    <img src="https://i.postimg.cc/MHzMhgrt/openapi-icon-132133.png"
+                         alt="OpenAPI"
+                         class="button-icon invert">
+                    <div class="button-label">OpenAPI Schema</div>
+                </a>
+                <a href="https://github.com/mamichels/rnd.is" class="button">
+                    <img src="https://i.postimg.cc/2SSR9TjY/Git-Hub-Mark-Light-64px.png"
+                         alt="Octocat"
+                         class="button-icon">
+                    <div class="button-label">GitHub</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <img src="https://i.postimg.cc/hv4555Dq/rnd-icon-clear.png" alt="logo">
+        </div>
+    </div>
+</div>
+
+<svg id="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="-0 0 25 13" preserveAspectRatio="xMidYMid slice">
+    <path d="M 27 1 L 13 13 C 13 13 11 15 7 12 L 0 6 L 0 3 L 0 0 L 3 5 C 5 8 8 8 10 5 L 12 2 C 14 -1 18 0 19 2 L 21 5 C 23 8 23 9 21 12 L 19 15 C 17 18 15 18 13 15 L 10 11 L 10 11 C 8 8 5 8 3 11 L 0 15 L 3 11 L 8 4 C 12 -1 16 4 19 4 L 30 4"
+          stroke="#D3D3D3" stroke-width=".01" stroke-linecap="round" fill="transparent"
+          id="control"/>
+</svg>
+</body>
+</html>
