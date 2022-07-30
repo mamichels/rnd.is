@@ -1,4 +1,4 @@
-# random-api
+# rnd.is
 A very small project that provides an HTTP API for random numbers.
 
 ## Usage

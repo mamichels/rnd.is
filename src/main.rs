@@ -1,5 +1,5 @@
 use actix_web::{App, HttpServer, web};
-use random_api::api::{number};
+use rnd_is::api::{number};
 use std::env;
 
 #[actix_web::main]

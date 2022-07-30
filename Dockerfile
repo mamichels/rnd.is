@@ -34,11 +34,11 @@ COPY --from=builder /etc/group /etc/group
 WORKDIR /app
 
 # Copy our build
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/random_api ./
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/rnd_is ./
 
 EXPOSE 8080
 
 # Use an unprivileged user.
 USER app:app
 
-CMD ["./random_api"]
+CMD ["./rnd_is"]
