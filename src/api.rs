@@ -33,6 +33,10 @@ pub async fn home() -> HttpResponse {
     HttpResponse::Ok().body("RND.IS API VERSION: ".to_owned() + API_VERSION)
 }
 
+pub async fn ping() -> HttpResponse {
+    HttpResponse::Ok().finish()
+}
+
 pub async fn serve_openapi_spec() -> Result<NamedFile, Error> {
     let path: PathBuf = OPENAPI_SPEC_PATH.parse().unwrap();
     Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
@@ -59,6 +63,13 @@ fn create_response(value: u32, params: Bounds) -> ApiResponse {
 mod tests {
     use super::*;
     use actix_web::{http::self, body};
+
+    #[actix_web::test]
+    async fn ping_ok() {
+        let resp = ping().await;
+
+        assert_eq!(resp.status(), http::StatusCode::OK);
+    }
 
     #[actix_web::test]
     async fn home_ok() {
