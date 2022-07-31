@@ -1,5 +1,5 @@
 use actix_web::{App, HttpServer, web};
-use rnd_is::api::{number, numbers, home, uuid, serve_openapi_spec, ping};
+use rnd_is::api::{number, numbers, home, uuid, serve_openapi_spec, serve_favicon, ping};
 use std::env;
 
 #[actix_web::main]
@@ -9,6 +9,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::head().to(ping))
             .route("/", web::get().to(home))
             .route("/openapi", web::get().to(serve_openapi_spec))
+            .route("/favicon", web::get().to(serve_favicon))
             .route("/number", web::get().to(number))
             .route("/numbers", web::get().to(numbers))
             .route("/uuid", web::get().to(uuid))

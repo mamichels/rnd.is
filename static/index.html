@@ -6,9 +6,10 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>RND.IS</title>
+    <link rel="icon" type="image/x-icon" href="./favicon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -72,7 +73,7 @@
             text-decoration: none;
             color: #FAFAFA;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
             background-color: #425775;
         }
 
@@ -105,6 +106,23 @@
             height: 100%;
         }
 
+        .chip {
+            color: #454545;
+            background-color: #e3e3e3;
+            padding: .3em .6em .5em .6em;
+            margin-right: .5rem;
+            border-radius: .5em;
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 400;
+            text-decoration: none;
+            transition: all .3s;
+        }
+
+        .chip:hover {
+            background-color: #425775;
+            color: #FAFAFA;
+        }
+
 
         @media all and (max-width: 30em) {
             a.button {
@@ -124,6 +142,13 @@
             <div class="box-body">
                 <div class="box-body-content">
                     <h1>A source for randomness</h1>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="box-body-content">
+                    <a href="./number?min=1&max=10" class="chip">/number</a>
+                    <a href="./numbers?length=3&min=1&max=10"  class="chip">/numbers</a>
+                    <a href="./uuid" class="chip">/uuid</a>
                 </div>
             </div>
             <div class="box-action">

@@ -9,6 +9,7 @@ use std::path::PathBuf;
 const API_VERSION: &str = env!("CARGO_PKG_VERSION");
 const OPENAPI_SPEC_PATH: &str = "./static/openapi.yml";
 const INDEX_PATH: &str = "./static/index.html";
+const FAVICON_PATH: &str = "./static/favicon.ico";
 
 #[derive(Deserialize, Serialize)]
 pub struct NumberQuery {
@@ -48,6 +49,10 @@ pub async fn ping() -> HttpResponse {
 
 pub async fn serve_openapi_spec() -> Result<NamedFile, Error> {
     let path: PathBuf = OPENAPI_SPEC_PATH.parse().unwrap();
+    Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
+}
+pub async fn serve_favicon() -> Result<NamedFile, Error> {
+    let path: PathBuf = FAVICON_PATH.parse().unwrap();
     Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
 }
 
@@ -104,6 +109,13 @@ mod tests {
         let resp = serve_openapi_spec().await.unwrap();
         let path = resp.path().as_os_str();
         assert!(path.to_str().unwrap().to_string().contains("openapi.yml"));
+    }
+
+    #[actix_web::test]
+    async fn serve_favicon_path() {
+        let resp = serve_favicon().await.unwrap();
+        let path = resp.path().as_os_str();
+        assert!(path.to_str().unwrap().to_string().contains("favicon.ico"));
     }
 
     #[actix_web::test]
