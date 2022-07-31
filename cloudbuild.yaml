@@ -1,0 +1,8 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - name: "gcr.io/kaniko-project/executor:latest"
+    args: ["--cache=true", "--cache-ttl=48h", "--destination=gcr.io/graphical-tape-287210/rnd-is"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ['beta', 'run', 'deploy', 'rnd-is', '--image', 'gcr.io/graphical-tape-287210/rnd-is:latest', '--region', 'europe-west1', '--allow-unauthenticated', '--platform', 'managed']

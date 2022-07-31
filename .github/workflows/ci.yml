@@ -7,10 +7,18 @@ on:
 
 jobs:
 
-  test:
+  deployment:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CLOUD_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
 
       - name: Update local toolchain
         run: |
@@ -22,31 +30,15 @@ jobs:
         run: |
           cargo --version --verbose
           rustc --version
-          cargo clippy --version          
+          cargo clippy --version
 
       - name: Test
         run: |
           cargo check
           cargo clippy -- -D warnings
-          cargo test --all          
+          cargo test --all         
 
-
-      - name: Build Docker image
-        run: docker build -t registry.heroku.com/${{ secrets.HEROKU_APP }}/web:latest .
-
-      - name: Docker image info
-        run: docker images
-
-      - name: Login to container registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:login
-
-      - name: Push Docker image
-        # see here for the details of the release phase https://devcenter.heroku.com/articles/container-registry-and-runtime#release-phase
-        run: docker push registry.heroku.com/${{ secrets.HEROKU_APP }}/web
-
-      - name: Release
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a ${{ secrets.HEROKU_APP }} web
+      - name: Run cloud build
+        run: |
+          export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+          gcloud builds submit . --config cloudbuild.yaml --timeout=1200 --machine-type=e2-highcpu-8
