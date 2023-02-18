@@ -21,7 +21,7 @@ curl -X GET 'rnd.is/number?min=1&max=404'
 Returns:
 ```json
 {
-  "apiVersion": "0.3.0",
+  "apiVersion": "0.3.1",
   "params": {
     "min": 1,
     "max": 404
@@ -43,7 +43,7 @@ curl -X GET 'rnd.is/numbers?length=3&min=1&max=404'
 Returns:
 ```json
 {
-  "apiVersion": "0.3.0",
+  "apiVersion": "0.3.1",
   "params": {
     "min": 1,
     "max": 404,
@@ -70,11 +70,26 @@ curl -X GET 'rnd.is/uuid'
 Returns:
 ```json
 {
-  "apiVersion": "0.3.0",
+  "apiVersion": "0.3.1",
   "params": null,
   "data": {
     "kind": "string",
     "value": "08e54ac3-e661-44ee-88b1-09a6afcb34b4"
   }
 }
+```
+
+## Contribution
+
+### Run locally
+To start the API locally you'll need to set the var `PORT`, e.g. `export PORT=8080`.
+Afterwards run:
+```shell
+cargo run --package rnd_is --bin rnd_is
+```
+
+### Run tests
+To execute all tests run:
+```shell
+cargo test
 ```
