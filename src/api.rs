@@ -5,6 +5,7 @@ use crate::random::{generate_number, generate_numbers, generate_uuid};
 use serde::{Serialize, Deserialize};
 use std::str;
 use std::path::PathBuf;
+use std::any::{Any};
 
 const API_VERSION: &str = env!("CARGO_PKG_VERSION");
 const OPENAPI_SPEC_PATH: &str = "./static/openapi.yml";
@@ -51,6 +52,7 @@ pub async fn serve_openapi_spec() -> Result<NamedFile, Error> {
     let path: PathBuf = OPENAPI_SPEC_PATH.parse().unwrap();
     Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
 }
+
 pub async fn serve_favicon() -> Result<NamedFile, Error> {
     let path: PathBuf = FAVICON_PATH.parse().unwrap();
     Ok(NamedFile::open(path).unwrap().set_content_type(mime::TEXT_PLAIN))
@@ -59,19 +61,25 @@ pub async fn serve_favicon() -> Result<NamedFile, Error> {
 pub async fn number(bounds: Query<NumberQuery>) -> HttpResponse {
     let value = generate_number(bounds.min, bounds.max);
     let api_response = create_response(value, bounds.into_inner(), "number");
-    HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
+    send_response(&api_response)
 }
 
 pub async fn numbers(bounds: Query<NumbersQuery>) -> HttpResponse {
     let value = generate_numbers(bounds.min, bounds.max, bounds.length);
     let api_response = create_response(value, bounds.into_inner(), "number");
-    HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
+    send_response(&api_response)
 }
 
 pub async fn uuid() -> HttpResponse {
     let value = generate_uuid();
     let api_response = create_response(value, (), "string");
-    HttpResponse::Ok().body(serde_json::to_string(&api_response).unwrap())
+    send_response(&api_response)
+}
+
+fn send_response<T: Any + Serialize, K: Any + Serialize>(api_response: &ApiResponse<T, K>) -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type(mime::APPLICATION_JSON)
+        .body(serde_json::to_string(&api_response).unwrap())
 }
 
 fn create_response<T, K>(value: T, params: K, kind: &str) -> ApiResponse<T, K> {
@@ -145,7 +153,7 @@ mod tests {
         let bytes = body::to_bytes(resp.into_body()).await.unwrap();
 
         let actual = str::from_utf8(&bytes).unwrap();
-        let expected = "\"apiVersion\":\"0.3.0\"";
+        let expected = "\"apiVersion\":\"0.3.1\"";
         assert!(actual.contains(expected));
     }
 }
