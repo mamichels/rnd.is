@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:hx-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -9,7 +9,11 @@
     <link rel="icon" type="image/x-icon" href="./favicon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap"
+          rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.1"
+            integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
+            crossorigin="anonymous"></script>
     <style>
         body {
             margin: 0;
@@ -40,16 +44,25 @@
 
         .panel {
             display: flex;
-            width: 65%;
+            width: 80vw;
             padding: 1rem;
+            transition: all 1s ease;
         }
 
         .panel-left {
-            margin-right: auto;
+            margin-right: 0;
+            width: 20vw;
+        }
+
+        .panel-middle {
+            margin-right: 2em;
+            transition: all 1s ease;
         }
 
         .panel-right {
+            margin-left: auto;
             text-align: right;
+            width: 25vw;
         }
 
         .panel-right img {
@@ -113,9 +126,27 @@
             margin-right: .5rem;
             border-radius: .5em;
             font-family: 'Source Code Pro', monospace;
-            font-weight: 400;
+            font-weight: 600;
             text-decoration: none;
             transition: all .3s;
+        }
+
+        pre {
+            margin: 1em 1em;
+            transition: all 1s ease;
+        }
+
+        .json-container {
+            color: transparent;
+            background-color: transparent;
+            margin-right: .5rem;
+            border-radius: .5em;
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+            text-decoration: none;
+            width: 0vw;
+            height: 60%;
+            transition: all 1s ease;
         }
 
         .chip:hover {
@@ -131,6 +162,19 @@
             }
         }
     </style>
+    <script>
+        function formatJson() {
+            const jsonContainer = document.getElementsByClassName('json-container')[0];
+            const obj = JSON.parse(document.getElementById('example').innerText);
+            jsonContainer.style.width = 'auto';
+            jsonContainer.style.padding = '2em';
+            jsonContainer.style.marginRight = 'auto';
+            jsonContainer.style.color = '#454545';
+            jsonContainer.style.background = '#e3e3e3';
+            document.getElementById('example').innerText = JSON.stringify(obj, null, 2);
+        }
+    </script>
+
 </head>
 <body>
 <div class="container">
@@ -146,9 +190,18 @@
             </div>
             <div class="box-body">
                 <div class="box-body-content">
-                    <a href="./number?min=1&max=10" class="chip">/number</a>
-                    <a href="./numbers?length=3&min=1&max=10"  class="chip">/numbers</a>
-                    <a href="./uuid" class="chip">/uuid</a>
+                    <a hx-get="./number?min=1&max=10"
+                       hx-target="#example"
+                       hx-on::after-request="formatJson()"
+                       class="chip">/number</a>
+                    <a hx-get="./numbers?length=3&min=1&max=10"
+                       hx-target="#example"
+                       hx-on::after-request="formatJson()"
+                       class="chip">/numbers</a>
+                    <a hx-get="/uuid"
+                       hx-target="#example"
+                       hx-on::after-request="formatJson()"
+                       class="chip">/uuid</a>
                 </div>
             </div>
             <div class="box-action">
@@ -165,6 +218,10 @@
                     <div class="button-label">GitHub</div>
                 </a>
             </div>
+        </div>
+
+        <div class="panel-middle">
+            <pre id="example" class="json-container"></pre>
         </div>
 
         <div class="panel-right">
